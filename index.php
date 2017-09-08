@@ -2,15 +2,26 @@
 	
 require_once __DIR__.'/vendor/autoload.php';
 
+use GuzzleHttp\Client;
+use Symfony\Component\HttpFoundation\Response;
+
+$api_key = getenv('OPEN_WEATHER_API');
+
+
 $app = new Silex\Application();
 
-$app->get('/', function() use($app) {
+$app->get('/clima', function() use($app,$api_key) {
 
-	//
+	$client = new Client();
+	$url = "http://api.openweathermap.org/data/2.5/weather?id=3530597&appid=$api_key&units=metric";
+	$response = $client->get($url);
+	$body = $response->getBody();
+	
+	return new Response($body,200, array('Content-Type' => 'application/json'));
 
-	$datos = ["Francisco Javier Hernandez Carreno" => "089294930"];
-
-    return $app->json($datos);
 });
+
+
+
 
 $app->run();
